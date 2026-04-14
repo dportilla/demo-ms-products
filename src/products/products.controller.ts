@@ -1,4 +1,4 @@
-import { Controller, Param, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, ParseUUIDPipe } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { PaginationDto } from '@/src/common';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -40,7 +40,7 @@ export class ProductsController {
 
 	// @Delete(':id')
 	@MessagePattern({ cmd: 'delete_product' })
-	remove(@Param('id', ParseUUIDPipe) id: string) {
+	remove(@Payload('id', ParseUUIDPipe) id: string) {
 		return this.productsService.remove(id);
 	}
 }
