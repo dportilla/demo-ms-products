@@ -20,7 +20,7 @@ async function bootstrap() {
 		},
 	);
 
-	const logger = new Logger('Bootstrap');
+	const logger = new Logger('Products-MS');
 
 	// Use global validation pipe with whitelist and forbidNonWhitelisted options
 	app.useGlobalPipes(
