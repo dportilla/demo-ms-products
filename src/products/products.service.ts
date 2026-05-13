@@ -43,7 +43,7 @@ export class ProductsService {
 		};
 	}
 
-	async findOne(id: string) {
+	async findOne(id: number) {
 		const product = await this.prisma.product.findUnique({
 			where: { id, available: true },
 		});
@@ -58,7 +58,7 @@ export class ProductsService {
 		return product;
 	}
 
-	async update(id: string, updateProductDto: UpdateProductDto) {
+	async update(id: number, updateProductDto: UpdateProductDto) {
 		const { id: __, ...data } = updateProductDto;
 
 		await this.findOne(id);
@@ -69,7 +69,7 @@ export class ProductsService {
 		});
 	}
 
-	async remove(id: string) {
+	async remove(id: number) {
 		await this.findOne(id);
 
 		// Hard delete the product

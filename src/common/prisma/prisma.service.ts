@@ -5,7 +5,7 @@ import {
 	OnModuleInit,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { PrismaPg } from '@prisma/adapter-pg';
+import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3';
 import { PrismaClient } from '@/generated/prisma/client';
 
 @Injectable()
@@ -15,17 +15,19 @@ export class PrismaService
 {
 	private readonly logger = new Logger(PrismaService.name);
 	constructor(configService: ConfigService) {
+		const adapter = new PrismaBetterSqlite3({
+			url: configService.getOrThrow<string>('db.url'),
+		});
+
 		super({
-			adapter: new PrismaPg({
-				connectionString: configService.getOrThrow<string>('db.url'),
-			}),
+			adapter,
 		});
 	}
 
 	async onModuleInit() {
 		try {
 			await this.$connect();
-			this.logger.log('Connected to the database PG');
+			this.logger.log('Connected to the database Sqlite');
 		} catch (error) {
 			this.logger.error(`Failed to connect to the database: ${error}`);
 		}
