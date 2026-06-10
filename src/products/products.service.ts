@@ -7,7 +7,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 
 @Injectable()
 export class ProductsService {
-	constructor(private prisma: PrismaService) {}
+	constructor(private prisma: PrismaService) { }
 
 	async create(createProductDto: CreateProductDto) {
 		const product = await this.prisma.product.create({
@@ -22,21 +22,23 @@ export class ProductsService {
 			where: { available: true },
 		});
 		const lastPage = Math.ceil(totalProducts / limit);
+		const skip = (page - 1) * limit;
+		const take = limit;
+		const products = await this.prisma.product.findMany({
+			skip,
+			take,
+			where: { available: true },
+		});
 
 		return {
-			data: await this.prisma.product.findMany({
-				skip: (page - 1) * limit,
-				take: limit,
-				where: { available: true },
-			}),
+			data: products,
 			meta: {
 				totalItems: totalProducts,
-				page: page,
-				lastPage: lastPage,
-				hasNextPage: page < lastPage,
-				hasPreviousPage: page > 1,
-				itemsPerPage: limit,
 				totalPages: lastPage,
+				currentPage: page,
+				itemsPerPage: limit,
+				hasPreviousPage: page > 1,
+				hasNextPage: page < lastPage,
 				nextPage: page < lastPage ? page + 1 : null,
 				previousPage: page > 1 ? page - 1 : null,
 			},
