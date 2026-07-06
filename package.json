@@ -9,7 +9,7 @@
 		"build": "nest build",
 		"format": "pnpx @biomejs/biome check --write",
 		"start": "nest start",
-		"start:dev": "nest start --watch",
+		"start:dev": "pnpm docker:prisma&& nest start --watch",
 		"start:debug": "nest start --debug --watch",
 		"start:prod": "node dist/main",
 		"lint": "pnpx @biomejs/biome lint --write",
@@ -21,7 +21,8 @@
 		"prisma:setup": "pnpm dlx prisma generate && pnpm dlx prisma migrate dev --name init",
 		"prisma:generate": "pnpm dlx prisma generate",
 		"prisma:migrate": "pnpm dlx prisma migrate dev --name",
-		"prisma:studio": "pnpm dlx prisma studio"
+		"prisma:studio": "pnpm dlx prisma studio",
+		"docker:prisma": "prisma migrate dev && prisma generate"
 	},
 	"dependencies": {
 		"@nestjs/common": "^11.1.27",
