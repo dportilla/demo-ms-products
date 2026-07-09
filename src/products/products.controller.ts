@@ -48,4 +48,9 @@ export class ProductsController {
 	validateProductIds(@Payload() productIds: number[]) {
 		return this.productsService.validateProductIds(productIds);
 	}
+
+	@MessagePattern({ cmd: 'seed_products' })
+	seedProducts() {
+		return this.productsService.seedProducts();
+	}
 }

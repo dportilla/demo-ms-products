@@ -2,6 +2,7 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { PaginationDto } from '@/src/common';
 import { PrismaService } from '@/src/common/prisma/prisma.service';
+import { productSeed } from '@/src/common/seed/products.seed';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 
@@ -107,5 +108,26 @@ export class ProductsService {
 		}
 
 		return products;
+	}
+
+	async seedProducts() {
+		const existingProducts = await this.prisma.product.findFirst({
+			where: { available: true },
+		});
+
+		if (existingProducts) {
+			throw new RpcException({
+				status: HttpStatus.BAD_REQUEST,
+				message: 'Products already exist. Seeding is not allowed.',
+			});
+		}
+
+		await this.prisma.product.createMany({
+			data: productSeed,
+		});
+
+		return {
+			message: 'Products seeded successfully.',
+		};
 	}
 }
